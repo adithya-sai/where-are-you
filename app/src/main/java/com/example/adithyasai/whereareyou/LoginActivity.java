@@ -11,7 +11,6 @@ import android.widget.EditText;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final int REQUEST_READ_CONTACTS = 0;
 
     private AutoCompleteTextView emailView;
     private EditText passwordView;
