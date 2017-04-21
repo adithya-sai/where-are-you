@@ -27,4 +27,4 @@
             android:data="http://codepath.com/" />
     </Preference>
 
-    </PreferenceScreen>
+</PreferenceScreen>
