@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <Preference
+        android:key="add_members"
+        android:title="Add Members">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="http://codepath.com/" />
+    </Preference>
+
+    <Preference
+        android:key="remove_members"
+        android:title="Remove Members">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="http://codepath.com/" />
+
+    </Preference>
+
+    <Preference
+        android:key="del_group"
+        android:title="Delete Group">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="http://codepath.com/" />
+    </Preference>
+
+    </PreferenceScreen>
