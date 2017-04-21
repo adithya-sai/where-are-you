@@ -10,7 +10,7 @@
             android:title="Create new group" />
         <item
             android:id="@+id/nav_menu_3"
-            android:title="Add members" />
+            android:title="Manage group" />
         <item
             android:id="@+id/nav_menu_4"
             android:title="Manage Invitations" />
