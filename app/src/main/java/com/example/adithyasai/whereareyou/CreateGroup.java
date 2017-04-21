@@ -1,5 +1,6 @@
 package com.example.adithyasai.whereareyou;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -58,11 +59,13 @@ import static android.content.Context.MODE_WORLD_READABLE;
 public class CreateGroup extends Fragment {
     /******Gautham*****/
     Context context;
-    String address;
-    String key = "AIzaSyCL_FXN7Pr89d3d_4W8O4kHlUa-nJcgXo0";
+    String googleKey = "AIzaSyCL_FXN7Pr89d3d_4W8O4kHlUa-nJcgXo0";
     private LocationManager locationManager;
     private String provider;
-
+    private TextInputEditText groupName;
+    private String authKey;
+    private String userKey;
+    private String[] coordinates;
     public String getDest_coordinates() {
         return dest_coordinates;
     }
@@ -89,14 +92,24 @@ public class CreateGroup extends Fragment {
         context=getContext();
         getActivity().setTitle("Create new group");
         SharedPreferences sp = this.getActivity().getSharedPreferences("MyPrefs",MODE_WORLD_READABLE);
-        String username=sp.getString("userKey","default");
-        Toast.makeText(getActivity(),username,Toast.LENGTH_SHORT).show();
-
-        Button submit = (Button) this.getActivity().findViewById(R.id.btn_create_group);
-        final String coordinates;
-
+        userKey=sp.getString("userKey","default");
+        authKey=sp.getString("authKey","default");
+        Toast.makeText(getActivity(),userKey,Toast.LENGTH_SHORT).show();
         setDest_coordinates(getCoordinates());
-        System.out.println(getDest_coordinates());
+        coordinates=getDest_coordinates().split(",");
+        Button btnCreateGroup = (Button) view.findViewById(R.id.btn_create_group);
+        btnCreateGroup.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view){
+                Intent intent=new Intent(this,AddMembers.class);
+                Bundle bundle=new Bundle();
+                bundle.putString("authKey",authKey);
+                bundle.putString("authKey",userKey);
+                bundle.putString("latitude",coordinates[0]);
+                bundle.putString("longitude",coordinates[1]);
+                intent.putExtras(bundle);
+            }
+        });
+
 
     }
 
@@ -147,7 +160,7 @@ public class CreateGroup extends Fragment {
     {
         String url = "https://maps.googleapis.com/maps/api/geocode/json?address=";
         url += getAddress().replace(" ", "+");
-        url += "&key=" + key;
+        url += "&key=" + googleKey;
         return url;
     }
 
