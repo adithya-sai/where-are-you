@@ -4,16 +4,16 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_menu_1"
-            android:title="Menu 1" />
+            android:title="Current Group" />
         <item
             android:id="@+id/nav_menu_2"
-            android:title="Menu 2" />
+            android:title="Create new group" />
         <item
             android:id="@+id/nav_menu_3"
-            android:title="Menu 3" />
+            android:title="Add members" />
         <item
             android:id="@+id/nav_menu_4"
-            android:title="Menu 4" />
+            android:title="Manage Invitations" />
     </group>
 
 </menu>

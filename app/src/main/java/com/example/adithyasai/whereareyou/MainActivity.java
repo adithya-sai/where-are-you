@@ -29,8 +29,10 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Fragment fragment=new CreateGroup();
+                FragmentTransaction ft=getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame,fragment);
+                ft.commit();
             }
         });
 
@@ -89,9 +91,10 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
         switch(itemId){
             case R.id.nav_menu_1:
-                fragment=new CreateGroup();
+                fragment=new CurrentGroup();
                 break;
-
+            case R.id.nav_menu_2:
+                fragment=new CreateGroup();
         }
         if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
