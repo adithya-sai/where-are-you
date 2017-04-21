@@ -94,7 +94,7 @@ public class CreateGroup extends Fragment {
         SharedPreferences sp = this.getActivity().getSharedPreferences("MyPrefs",MODE_WORLD_READABLE);
         userKey=sp.getString("userKey","default");
         authKey=sp.getString("authKey","default");
-        Toast.makeText(getActivity(),userKey,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(),authKey,Toast.LENGTH_SHORT).show();
         Button btnCreateGroup = (Button) view.findViewById(R.id.btn_create_group);
         btnCreateGroup.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
