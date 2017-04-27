@@ -21,6 +21,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -59,6 +61,33 @@ public class AsyncHttpPost extends AsyncTask<String, String, String> {
             else if(params[0].equals("googleapi"))
             {
                 response=getJSON(params[1]);
+            }
+            else if(params[0].equals("createGroup")){
+                System.out.println(params[3]);
+                json.put("latitude",params[1]);
+                json.put("longitude",params[2]);
+                json.put("admin_user_id",params[3]);
+                json.put("admin_auth_token",params[4]);
+                ArrayList<String> userList=new ArrayList<String>();
+                if(!params[5].equals(""))
+                    userList.add(params[5]);
+                if(!params[6].equals(""))
+                userList.add(params[6]);
+                if(!params[7].equals(""))
+                userList.add(params[7]);
+                if(!params[8].equals(""))
+                userList.add(params[8]);
+                if(!params[9].equals(""))
+                userList.add(params[9]);
+                String stringList=userList.toString()
+                        .replace(" ","")
+                        .replace("[","")
+                        .replace("]","")
+                        .trim();
+                json.put("user_id_list", stringList);
+                json.put("group_name",params[10]);
+                System.out.println(json.toString());
+                response=makePostRequest("http://54.218.112.218/create_group",json);
             }
             return response;
         } catch (Exception ex) {

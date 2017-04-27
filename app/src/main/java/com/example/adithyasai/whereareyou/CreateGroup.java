@@ -94,6 +94,7 @@ public class CreateGroup extends Fragment {
         SharedPreferences sp = this.getActivity().getSharedPreferences("MyPrefs",MODE_WORLD_READABLE);
         userKey=sp.getString("userKey","default");
         authKey=sp.getString("authKey","default");
+        groupName=(TextInputEditText) view.findViewById(R.id.input_group_name);
         Toast.makeText(getActivity(),authKey,Toast.LENGTH_SHORT).show();
         Button btnCreateGroup = (Button) view.findViewById(R.id.btn_create_group);
         btnCreateGroup.setOnClickListener(new View.OnClickListener(){
@@ -103,15 +104,14 @@ public class CreateGroup extends Fragment {
                 Intent intent=new Intent(CreateGroup.this.getActivity(),AddMembers.class);
                 Bundle bundle=new Bundle();
                 bundle.putString("authKey",authKey);
-                bundle.putString("authKey",userKey);
+                bundle.putString("userKey",userKey);
                 bundle.putString("latitude",coordinates[0]);
                 bundle.putString("longitude",coordinates[1]);
+                bundle.putString("groupName",groupName.getText().toString());
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
-
-
     }
 
     public String getCoordinates()
