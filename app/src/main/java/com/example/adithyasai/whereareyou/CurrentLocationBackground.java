@@ -18,6 +18,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.PermissionChecker;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -39,13 +42,70 @@ public class CurrentLocationBackground extends Service implements LocationListen
     Location location;
     public static String str_receiver = "servicetutorial.service.receiver";
     double latitude;
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getAuthKey() {
+        return authKey;
+    }
+
+    public void setAuthKey(String authKey) {
+        this.authKey = authKey;
+    }
+
+    String user;
+    String authKey;
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
     double longitude;
+
+    public String getDestcoord() {
+        return destcoord;
+    }
+
+    public void setDestcoord(String destcoord) {
+        this.destcoord = destcoord;
+    }
+
+    String destcoord;
+
     IBinder binder= new MyBinder();
     protected LocationManager locationManager;
     boolean flag;
     String provider;
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 1;
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 30 * 1;
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
+
+    public String getDest() {
+        return dest;
+    }
+
+    public void setDest(String dest) {
+        this.dest = dest;
+    }
+
+    String dest;
 
     public CurrentLocationBackground()
     {
@@ -63,13 +123,23 @@ public class CurrentLocationBackground extends Service implements LocationListen
         return binder;
     }
 
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    String groupId;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        System.out.println("Inside onCreate");
         flag=false;
         mTimer = new Timer();
-        mTimer.schedule(new TimerTaskToGetLocation(),5,400);
+        mTimer.schedule(new TimerTaskToGetLocation(),5,15000);
         intent = new Intent(str_receiver);
 //        fn_getlocation();
     }
@@ -77,6 +147,12 @@ public class CurrentLocationBackground extends Service implements LocationListen
     @Override
     public void onLocationChanged(Location arg0) {
         location=arg0;
+        try
+        {
+            Thread.sleep(10000);
+        }catch(Exception e){
+
+        }
         fn_update(location);
         // TODO Auto-generated method stub
     }
@@ -157,7 +233,7 @@ public class CurrentLocationBackground extends Service implements LocationListen
             }
         }catch(Exception e)
         {
-
+            e.printStackTrace();
         }
 
     }
@@ -177,11 +253,51 @@ public class CurrentLocationBackground extends Service implements LocationListen
     }
 
 
-    private void fn_update(Location location){
+    @Override
+    public int onStartCommand (Intent intent, int flags, int startId)
+    {
+        super.onStartCommand(intent, flags, startId);
+        Bundle bundle = intent.getExtras();
+        setDest(bundle.getString("destination"));
+        setAuthKey(bundle.getString("authKey"));
+        setUser(bundle.getString("user"));
+        setGroupId(bundle.getString("groupId"));
+        return START_STICKY;
+    }
 
-        intent.putExtra("latitude",location.getLatitude()+"");
-        intent.putExtra("longitude",location.getLongitude()+"");
-        sendBroadcast(intent);
+    private void fn_update(Location location){
+        try {
+            intent.putExtra("latitude", location.getLatitude() + "");
+            intent.putExtra("longitude", location.getLongitude() + "");
+            setLongitude(longitude);
+            setLatitude(latitude);
+            System.out.println(location.getLatitude() + " " + location.getLongitude());
+            String[] u = new String[2];
+
+            if (!getDest().isEmpty()) {
+                System.out.println("Inside getDest");
+                u[0] = "Get ETA";
+                u[1] = buildUrlDistance();
+                String s = new AsyncHttpPost(this).execute(u).get();
+                JSONObject jo1 = new JSONObject(s);
+                u = new String[7];
+                u[0] = "UpdateLocation";
+                u[1] = location.getLatitude()+"";
+                u[2]=location.getLongitude()+"";
+                u[3]=jo1.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("duration").getString("text").toString();
+                u[4]=getUser();
+                u[5]=getAuthKey();
+                u[6]=getGroupId();
+                String s2 = new AsyncHttpPost(this).execute(u).get();
+                System.out.println(s2);
+                intent.putExtra("json", s2);
+            }
+            sendBroadcast(intent);
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     private boolean getGPSStatus()
@@ -197,6 +313,23 @@ public class CurrentLocationBackground extends Service implements LocationListen
         return allowedLocationProviders.contains(LocationManager.GPS_PROVIDER);
     }
 
+    public String buildUrlDistance()
+    {
+        try
+        {
+            String url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=";
+            url += getLatitude() + "," + getLongitude();
+            String[] s=getDest().split(",");
+            url+="&destinations="+s[0]+"%2C"+s[1];
+            System.out.println(url);
+            return url;
+        }
+        catch(Exception je)
+        {
+            je.printStackTrace();
+        }
+        return null;
+    }
 
 
 }
