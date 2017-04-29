@@ -149,7 +149,7 @@ public class CurrentLocationBackground extends Service implements LocationListen
         location=arg0;
         try
         {
-            Thread.sleep(10000);
+            //Thread.sleep(10000);
         }catch(Exception e){
 
         }
@@ -269,9 +269,10 @@ public class CurrentLocationBackground extends Service implements LocationListen
         try {
             intent.putExtra("latitude", location.getLatitude() + "");
             intent.putExtra("longitude", location.getLongitude() + "");
+//            intent.setAction("LocationUpdate");
             setLongitude(longitude);
             setLatitude(latitude);
-            System.out.println(location.getLatitude() + " " + location.getLongitude());
+            System.out.println(getLatitude() + " " + getLongitude());
             String[] u = new String[2];
 
             if (!getDest().isEmpty()) {
