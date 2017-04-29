@@ -126,9 +126,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_menu_2:
                 fragment=new CreateGroup();
                 break;
-//            case R.id.nav_menu_3:
-//                fragment=new ManageGroup();
-//                break;
+            case R.id.nav_menu_3:
+                fragment=new ManageInvitation();
+                break;
         }
         if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
