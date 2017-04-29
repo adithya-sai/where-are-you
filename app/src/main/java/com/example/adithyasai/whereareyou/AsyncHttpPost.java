@@ -72,13 +72,13 @@ public class AsyncHttpPost extends AsyncTask<String, String, String> {
                 if(!params[5].equals(""))
                     userList.add(params[5]);
                 if(!params[6].equals(""))
-                userList.add(params[6]);
+                    userList.add(params[6]);
                 if(!params[7].equals(""))
-                userList.add(params[7]);
+                    userList.add(params[7]);
                 if(!params[8].equals(""))
-                userList.add(params[8]);
+                    userList.add(params[8]);
                 if(!params[9].equals(""))
-                userList.add(params[9]);
+                    userList.add(params[9]);
                 String stringList=userList.toString()
                         .replace(" ","")
                         .replace("[","")
@@ -88,6 +88,21 @@ public class AsyncHttpPost extends AsyncTask<String, String, String> {
                 json.put("group_name",params[10]);
                 System.out.println(json.toString());
                 response=makePostRequest("http://54.218.112.218/create_group",json);
+            }
+            else if(params[0].equals("Get ETA"))
+            {
+                response=getJSON(params[1]);
+            }
+            else if(params[0].equals("UpdateLocation"))
+            {
+                json.put("latitude",params[1]);
+                json.put("longitude",params[2]);
+                json.put("eta",params[3]);
+                json.put("user_id",params[4]);
+                json.put("auth_token",params[5]);
+                json.put("group_id",params[6]);
+                System.out.println(json.toString());
+                response=makePostRequest("http://54.218.112.218/update_location",json);
             }
             return response;
         } catch (Exception ex) {
@@ -149,7 +164,6 @@ public class AsyncHttpPost extends AsyncTask<String, String, String> {
 
     protected String getJSON(String urlstring) throws IOException, JSONException
     {
-        System.out.println("Inside getJSON APICall");
         InputStream is = new URL(urlstring).openStream();
         try {
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
@@ -166,7 +180,6 @@ public class AsyncHttpPost extends AsyncTask<String, String, String> {
         return null;
     }
     private static String readJSON(Reader rd) throws IOException {
-        System.out.println("Inside readJSON APICall");
         StringBuilder sb = new StringBuilder();
         int cp;
         while ((cp = rd.read()) != -1) {
