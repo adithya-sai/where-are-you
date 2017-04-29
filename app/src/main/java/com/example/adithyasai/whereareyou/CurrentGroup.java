@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
@@ -57,6 +56,9 @@ public class CurrentGroup extends Fragment implements OnMapReadyCallback{
     Marker m2;
     private Double curr_latitude;
     private Double curr_longitude;
+    private TextView[] tvArray_user;
+    private TextView[] tvArray_eta;
+    private TableRow[] trArray;
 
     public String getLatitude() {
         return latitude;
@@ -87,12 +89,9 @@ public class CurrentGroup extends Fragment implements OnMapReadyCallback{
         @Override
         public void onReceive(Context context, Intent intent) {
 
-              setLatitude(intent.getStringExtra("latitude"));
+            setLatitude(intent.getStringExtra("latitude"));
             setLongitude(intent.getStringExtra("longitude"));
             setJson(intent.getStringExtra("json"));
-            System.out.println(getJson());
-            System.out.println(getLatitude());
-            System.out.println(getLongitude());
             updateView(getJson());
             updateMap(getLatitude(),getLongitude());
         }
@@ -116,12 +115,29 @@ public class CurrentGroup extends Fragment implements OnMapReadyCallback{
         tl = (TableLayout) view.findViewById(R.id.current_group_table);
         TableRow tr=new TableRow(getContext());
         TextView tv0=new TextView(getContext());
+        tv0.setLayoutParams(new TableRow.LayoutParams(1));
         tv0.setText("USER ID");
         tr.addView(tv0);
         TextView tv1=new TextView(getContext());
+        tv1.setLayoutParams(new TableRow.LayoutParams(2));
         tv1.setText("ETA");
         tr.addView(tv1);
         tl.addView(tr);
+        tvArray_user =new TextView[5];
+        tvArray_eta=new TextView[5];
+        trArray=new TableRow[5];
+        for(int i=0;i<5;i++){
+            trArray[i]=new TableRow(getContext());
+            tvArray_user[i]=new TextView(getContext());
+            tvArray_user[i].setLayoutParams(new TableRow.LayoutParams(1));
+            tvArray_user[i].setText("");
+            trArray[i].addView(tvArray_user[i]);
+            tvArray_eta[i]=new TextView(getContext());
+            tvArray_eta[i].setLayoutParams(new TableRow.LayoutParams(2));
+            tvArray_eta[i].setText("");
+            trArray[i].addView(tvArray_eta[i]);
+            tl.addView(trArray[i]);
+        }
         return view;
     }
 
@@ -132,6 +148,8 @@ public class CurrentGroup extends Fragment implements OnMapReadyCallback{
         latitude= new String();
         longitude=new String();
         getActivity().setTitle("Current Group");
+        String jsonTest="[{\"eta\":\"2\",\"user_id\":\"a\"},{\"eta\":\"3\",\"user_id\":\"b\"}]";
+        updateView(jsonTest);
     }
     
 @Override
@@ -149,6 +167,10 @@ public class CurrentGroup extends Fragment implements OnMapReadyCallback{
                 .position(
                         new LatLng(0.0,0.0))
                 .draggable(true).visible(false));
+        m2 = gMap.addMarker(new MarkerOptions()
+                .position(
+                        new LatLng(0.0,0.0))
+                .draggable(true).visible(false));
     }
 
     public void updateView(String jsonString){
@@ -156,30 +178,28 @@ public class CurrentGroup extends Fragment implements OnMapReadyCallback{
             JSONArray userListArray = new JSONArray(jsonString);
             for(int i=0;i<userListArray.length();i++){
                 JSONObject currentUserJson=userListArray.getJSONObject(i);
-                TableRow row=new TableRow(getContext());
-                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-                row.setLayoutParams(lp);
-                TextView tv_user=new TextView(getContext());
-                tv_user.setText(currentUserJson.getString("user_id"));
-                row.addView(tv_user);
-                TextView tv_eta=new TextView(getContext());
-                tv_eta.setText(currentUserJson.getString("eta"));
-                row.addView(tv_eta);
-                tl.addView(row);
+//                TableRow row=new TableRow(getContext());
+//                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+//                trArray[i].setLayoutParams(lp);
+//                TextView tv_user=new TextView(getContext());
+                tvArray_user[i].setText(currentUserJson.getString("user_id"));
+//                TextView tv_eta=new TextView(getContext());
+                if(!currentUserJson.getString("eta").equals("0"))
+                    tvArray_eta[i].setText(currentUserJson.getString("eta"));
+                else
+                    tvArray_eta[i].setText("Reached");
+
             }
         }
         catch (Exception e){
             System.out.println("update text view exception");
+            e.printStackTrace();
         }
     }
 
     public void updateMap(String latitude,String longitude){
         curr_latitude=Double.parseDouble(latitude);
         curr_longitude=Double.parseDouble(longitude);
-//        fromCurr=new MarkerOptions()
-//                .position(new LatLng(curr_latitude,curr_longitude));
-//        toDest=new MarkerOptions()
-//                .position(new LatLng(dest_latitude,dest_longitude));
 
         GoogleDirection.withServerKey("AIzaSyCL_FXN7Pr89d3d_4W8O4kHlUa-nJcgXo0")
                 .from(new LatLng(curr_latitude, curr_longitude))
@@ -194,10 +214,6 @@ public class CurrentGroup extends Fragment implements OnMapReadyCallback{
                             m2.setPosition(new LatLng(dest_latitude,dest_longitude));
                             m1.setVisible(true);
                             m2.setVisible(true);
-
-//
-//                            gMap.addMarker(new MarkerOptions().position(new LatLng(33.41906056, -111.91113145)).title("You are here!"));
-//                            gMap.addMarker(new MarkerOptions().position(new LatLng(33.4195402,-111.9159409)).title("Destination"));
 
                             ArrayList<LatLng> directionPositionList = direction.getRouteList().get(0).getLegList().get(0).getDirectionPoint();
                             gMap.addPolyline(DirectionConverter.createPolyline(getContext(), directionPositionList, 5, Color.RED));

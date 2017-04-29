@@ -275,7 +275,6 @@ public class CurrentLocationBackground extends Service implements LocationListen
             setLongitude(longitude);
             setLatitude(latitude);
             String[] u = new String[2];
-            intent.setAction("YES");
             if (!getDest().isEmpty()&&location.getLongitude()!=0.0&&location.getLatitude()!=0.0) {
 
                 u[0] = "Get ETA";
