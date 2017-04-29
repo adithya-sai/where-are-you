@@ -54,7 +54,7 @@ public class AsyncHttpPost extends AsyncTask<String, String, String> {
                 json.put("user_id",params[1]);
                 json.put("user_password",params[2]);
                 json.put("user_password_repeat",params[3]);
-                System.out.println(json.toString());
+
                 response = makePostRequest("http://54.218.112.218/create_user_account", json);
 //                System.out.println(response);
             }
@@ -63,7 +63,6 @@ public class AsyncHttpPost extends AsyncTask<String, String, String> {
                 response=getJSON(params[1]);
             }
             else if(params[0].equals("createGroup")){
-                System.out.println(params[3]);
                 json.put("latitude",params[1]);
                 json.put("longitude",params[2]);
                 json.put("admin_user_id",params[3]);
@@ -86,7 +85,6 @@ public class AsyncHttpPost extends AsyncTask<String, String, String> {
                         .trim();
                 json.put("user_id_list", stringList);
                 json.put("group_name",params[10]);
-                System.out.println(json.toString());
                 response=makePostRequest("http://54.218.112.218/create_group",json);
             }
             else if(params[0].equals("Get ETA"))
@@ -101,7 +99,6 @@ public class AsyncHttpPost extends AsyncTask<String, String, String> {
                 json.put("user_id",params[4]);
                 json.put("auth_token",params[5]);
                 json.put("group_id",params[6]);
-                System.out.println(json.toString());
                 response=makePostRequest("http://54.218.112.218/update_location",json);
             }
             else if(params[0].equals("get_invite_list"))
