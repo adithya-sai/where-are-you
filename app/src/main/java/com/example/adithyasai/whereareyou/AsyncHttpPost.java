@@ -104,6 +104,12 @@ public class AsyncHttpPost extends AsyncTask<String, String, String> {
                 System.out.println(json.toString());
                 response=makePostRequest("http://54.218.112.218/update_location",json);
             }
+            else if(params[0].equals("get_invite_list"))
+            {
+                json.put("user_id",params[1]);
+                json.put("auth_token",params[2]);
+                response=makePostRequest("http://54.218.112.218/get_invite_list",json);
+            }
             return response;
         } catch (Exception ex) {
             System.out.println("doInBackground Exception: "+ex.getMessage());

@@ -45,8 +45,10 @@ public class LoginActivity extends AppCompatActivity {
                     String authKeyFromJSON =(String)jo.get("auth_token");
                     String groupId =(int)jo.get("event_id")+"";
                     String groupName =(String)jo.get("event_name");
-                    String latitude =(double)jo.get("latitude")+"";
-                    String longitude =(double)jo.get("longitude")+"";
+//                    String latitude =(double)jo.get("latitude")+"";
+//                    String longitude =(double)jo.get("longitude")+"";
+                    String latitude="33";
+                    String longitude="33";
                     if(result.equals("False")){
                         Toast.makeText(LoginActivity.this,"Invalid entry",Toast.LENGTH_SHORT).show();
                     }
