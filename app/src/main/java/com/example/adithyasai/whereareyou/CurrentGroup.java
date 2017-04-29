@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,12 +19,24 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akexorcist.googledirection.DirectionCallback;
+import com.akexorcist.googledirection.GoogleDirection;
+import com.akexorcist.googledirection.constant.AvoidType;
+import com.akexorcist.googledirection.model.Direction;
+import com.akexorcist.googledirection.util.DirectionConverter;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import static android.content.Context.MODE_WORLD_READABLE;
 
@@ -36,8 +49,14 @@ public class CurrentGroup extends Fragment implements OnMapReadyCallback{
     String longitude;   
     private GoogleMap gMap;
     private TableLayout tl;
-    private String dest_latitude;
-    private String dest_longitude;
+    private Double dest_latitude;
+    private Double dest_longitude;
+//    private MarkerOptions fromCurr;
+//    private MarkerOptions toDest;
+    Marker m1;
+    Marker m2;
+    private Double curr_latitude;
+    private Double curr_longitude;
 
     public String getLatitude() {
         return latitude;
@@ -67,9 +86,15 @@ public class CurrentGroup extends Fragment implements OnMapReadyCallback{
     BroadcastReceiver br = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+
               setLatitude(intent.getStringExtra("latitude"));
             setLongitude(intent.getStringExtra("longitude"));
             setJson(intent.getStringExtra("json"));
+            System.out.println(getJson());
+            System.out.println(getLatitude());
+            System.out.println(getLongitude());
+            updateView(getJson());
+            updateMap(getLatitude(),getLongitude());
         }
     };
     @Nullable
@@ -84,8 +109,8 @@ public class CurrentGroup extends Fragment implements OnMapReadyCallback{
         fragment.getMapAsync(this);
         //Destination coordinates
         SharedPreferences sp = this.getActivity().getSharedPreferences("MyPrefs",MODE_WORLD_READABLE);
-        dest_latitude=sp.getString("latitude","default");
-        dest_longitude=sp.getString("longitude","default");
+        dest_latitude=Double.parseDouble(sp.getString("latitude","default"));
+        dest_longitude=Double.parseDouble(sp.getString("longitude","default"));
 
         //Table creation
         tl = (TableLayout) view.findViewById(R.id.current_group_table);
@@ -107,24 +132,6 @@ public class CurrentGroup extends Fragment implements OnMapReadyCallback{
         latitude= new String();
         longitude=new String();
         getActivity().setTitle("Current Group");
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(5000);
-                        if (!latitude.isEmpty()) {
-                            System.out.println(getLatitude()+" "+getLongitude()+" "+getJson());
-                        } else {
-                            System.out.println("empty");
-                        }
-                    } catch (Exception e) {
-                    e.printStackTrace();
-                    }
-                }
-            }
-        });
-        t.start();
     }
     
 @Override
@@ -138,9 +145,13 @@ public class CurrentGroup extends Fragment implements OnMapReadyCallback{
     @Override
     public void onMapReady(GoogleMap googleMap){
         gMap=googleMap;
+        m1 = gMap.addMarker(new MarkerOptions()
+                .position(
+                        new LatLng(0.0,0.0))
+                .draggable(true).visible(false));
     }
 
-    public void updateTextView(String jsonString){
+    public void updateView(String jsonString){
         try {
             JSONArray userListArray = new JSONArray(jsonString);
             for(int i=0;i<userListArray.length();i++){
@@ -160,5 +171,51 @@ public class CurrentGroup extends Fragment implements OnMapReadyCallback{
         catch (Exception e){
             System.out.println("update text view exception");
         }
+    }
+
+    public void updateMap(String latitude,String longitude){
+        curr_latitude=Double.parseDouble(latitude);
+        curr_longitude=Double.parseDouble(longitude);
+//        fromCurr=new MarkerOptions()
+//                .position(new LatLng(curr_latitude,curr_longitude));
+//        toDest=new MarkerOptions()
+//                .position(new LatLng(dest_latitude,dest_longitude));
+
+        GoogleDirection.withServerKey("AIzaSyCL_FXN7Pr89d3d_4W8O4kHlUa-nJcgXo0")
+                .from(new LatLng(curr_latitude, curr_longitude))
+                .to(new LatLng(dest_latitude,dest_longitude))
+                .avoid(AvoidType.FERRIES)
+                .avoid(AvoidType.HIGHWAYS)
+                .execute(new DirectionCallback() {
+                    @Override
+                    public void onDirectionSuccess(Direction direction, String rawBody) {
+                        if (direction.isOK()) {
+                            m1.setPosition(new LatLng(curr_latitude,curr_longitude));
+                            m2.setPosition(new LatLng(dest_latitude,dest_longitude));
+                            m1.setVisible(true);
+                            m2.setVisible(true);
+
+//
+//                            gMap.addMarker(new MarkerOptions().position(new LatLng(33.41906056, -111.91113145)).title("You are here!"));
+//                            gMap.addMarker(new MarkerOptions().position(new LatLng(33.4195402,-111.9159409)).title("Destination"));
+
+                            ArrayList<LatLng> directionPositionList = direction.getRouteList().get(0).getLegList().get(0).getDirectionPoint();
+                            gMap.addPolyline(DirectionConverter.createPolyline(getContext(), directionPositionList, 5, Color.RED));
+                            CameraUpdate center=
+                                    CameraUpdateFactory.newLatLng(new LatLng((curr_latitude+dest_latitude)/2,(curr_longitude+dest_longitude)/2));
+                            CameraUpdate zoom=CameraUpdateFactory.zoomTo(16);
+
+                            gMap.moveCamera(center);
+                            gMap.animateCamera(zoom);
+                        } else {
+                            System.out.println("No");
+                        }
+                    }
+
+                    @Override
+                    public void onDirectionFailure(Throwable t) {
+                        System.out.println("error");
+                    }
+                });
     }
 }

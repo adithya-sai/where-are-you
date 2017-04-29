@@ -243,7 +243,7 @@ public class CurrentLocationBackground extends Service implements LocationListen
     private class TimerTaskToGetLocation extends TimerTask {
         @Override
         public void run() {
-
+            fn_getlocation();
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -276,7 +276,8 @@ public class CurrentLocationBackground extends Service implements LocationListen
             setLatitude(latitude);
             String[] u = new String[2];
             intent.setAction("YES");
-            if (!getDest().isEmpty()) {
+            if (!getDest().isEmpty()&&location.getLongitude()!=0.0&&location.getLatitude()!=0.0) {
+
                 u[0] = "Get ETA";
                 u[1] = buildUrlDistance();
                 String s = new AsyncHttpPost(this).execute(u).get();
@@ -290,7 +291,6 @@ public class CurrentLocationBackground extends Service implements LocationListen
                 u[5]=getAuthKey();
                 u[6]=getGroupId();
                 String s2 = new AsyncHttpPost(this).execute(u).get();
-                System.out.println(s2);
                 intent.putExtra("json", s2);
             }
             sendBroadcast(intent);
