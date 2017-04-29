@@ -1,6 +1,7 @@
 package com.example.adithyasai.whereareyou;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -63,8 +64,28 @@ public class MainActivity extends AppCompatActivity
     public void onResume()
     {
         super.onResume();
+        String dest="33.40,-111.89";
         Intent intent = new Intent(this,CurrentLocationBackground.class);
-        startService(intent);
+        Bundle extras =new Bundle();
+        SharedPreferences sp = getSharedPreferences("MyPrefs",MODE_WORLD_READABLE);
+        String user=sp.getString("userKey","default");
+        String authKey=sp.getString("authKey","default");
+        String groupId=sp.getString("event_id","default");
+        String latitude=sp.getString("latitude","default");
+        String longitude=sp.getString("longitude","default");
+        latitude=latitude.replace(" ","");
+        longitude=longitude.replace(" ","");
+        dest=latitude+","+longitude;
+        extras.putString("groupId",groupId);
+        extras.putString("destination",dest);
+        extras.putString("user",user);
+        extras.putString("authKey",authKey);
+        intent.putExtras(extras);
+        if(latitude.length()>0 && longitude.length()>0)
+        {
+            startService(intent);
+        }
+
     }
 
     @Override

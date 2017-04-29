@@ -1,11 +1,16 @@
 package com.example.adithyasai.whereareyou;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -21,6 +26,8 @@ public class AddMembers extends AppCompatActivity {
     private TextInputEditText userId4;
     private TextInputEditText userId5;
 
+    Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,11 +38,16 @@ public class AddMembers extends AppCompatActivity {
         latitude=bundle.getString("latitude");
         longitude=bundle.getString("longitude");
         groupName=bundle.getString("groupName");
+        System.out.println(userKey);
+        System.out.println(authKey);
+        System.out.println(latitude);
+        System.out.println(longitude);
         userId1=(TextInputEditText) findViewById(R.id.user_1);
         userId2=(TextInputEditText) findViewById(R.id.user_2);
         userId3=(TextInputEditText) findViewById(R.id.user_3);
         userId4=(TextInputEditText) findViewById(R.id.user_4);
         userId5=(TextInputEditText) findViewById(R.id.user_5);
+        context=this;
 
         final ArrayList<String> userList=new ArrayList<String>();
         Button addMembers = (Button) findViewById(R.id.btn_add);
@@ -50,8 +62,23 @@ public class AddMembers extends AppCompatActivity {
                 AsyncHttpPost ap=new AsyncHttpPost(AddMembers.this);
                 try{
                     String result=ap.execute("createGroup",latitude,longitude,userKey,authKey,userList.get(0),userList.get(1),userList.get(2),userList.get(3),userList.get(4),groupName).get();
-                    if(result=="False")
+                    if(result.equals("False"))
                         Toast.makeText(AddMembers.this,"User does not exist",Toast.LENGTH_SHORT).show();
+                    else
+                    {
+                        Intent intent = new Intent(context,CurrentLocationBackground.class);
+                        Bundle extras =new Bundle();
+                        String groupId=result;
+                        latitude=latitude.replace(" ","");
+                        longitude=longitude.replace(" ","");
+                        String dest=latitude+","+longitude;
+                        extras.putString("groupId",groupId);
+                        extras.putString("destination",dest);
+                        extras.putString("user",userKey);
+                        extras.putString("authKey",authKey);
+                        intent.putExtras(extras);
+                        startService(intent);
+                    }
                 }
                 catch (Exception e){
                     System.out.println("Add members:"+e.getMessage());
