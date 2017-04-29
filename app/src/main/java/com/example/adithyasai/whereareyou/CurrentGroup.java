@@ -21,14 +21,13 @@ import com.google.android.gms.maps.SupportMapFragment;
  * Created by adithyasai on 4/8/17.
  */
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
 public class CurrentGroup extends Fragment implements OnMapReadyCallback{
 
     private GoogleMap gMap;
-=======
-public class CurrentGroup extends Fragment {
+//=======
     String s;
->>>>>>> d65b73b28add4b70965a973a358ddf6782bf3d6b
+//>>>>>>> d65b73b28add4b70965a973a358ddf6782bf3d6b
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
