@@ -31,10 +31,6 @@ public class AddMembers extends AppCompatActivity {
         latitude=bundle.getString("latitude");
         longitude=bundle.getString("longitude");
         groupName=bundle.getString("groupName");
-        System.out.println(userKey);
-        System.out.println(authKey);
-        System.out.println(latitude);
-        System.out.println(longitude);
         userId1=(TextInputEditText) findViewById(R.id.user_1);
         userId2=(TextInputEditText) findViewById(R.id.user_2);
         userId3=(TextInputEditText) findViewById(R.id.user_3);

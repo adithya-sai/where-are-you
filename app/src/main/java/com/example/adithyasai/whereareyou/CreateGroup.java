@@ -201,7 +201,6 @@ public class CreateGroup extends Fragment {
                 return city;
             return city+","+state;
 
-
         }
         else if(city.isEmpty() || city==null)
         {
