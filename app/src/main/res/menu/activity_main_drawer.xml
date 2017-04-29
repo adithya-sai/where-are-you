@@ -10,10 +10,10 @@
             android:title="Create new group" />
         <item
             android:id="@+id/nav_menu_3"
-            android:title="Manage group" />
+            android:title="Manage Invitation" />
         <item
             android:id="@+id/nav_menu_4"
-            android:title="Manage Invitations" />
+            android:title="Manage Group" />
     </group>
 
 </menu>

@@ -1,30 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-
-    <Preference
-        android:key="add_members"
-        android:title="Add Members">
-        <intent android:action="android.intent.action.VIEW"
-            android:data="http://codepath.com/" />
-    </Preference>
-
-    <Preference
-        android:key="remove_members"
-        android:title="Remove Members">
-        <intent android:action="android.intent.action.VIEW"
-            android:data="http://codepath.com/" />
-
-    </Preference>
-
-    <Preference
-        android:key="del_group"
-        android:title="Delete Group">
-        <intent android:action="android.intent.action.VIEW"
-            android:data="http://codepath.com/" />
-    </Preference>
-
-    </PreferenceScreen>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <TextView android:id="@+id/Heading"
+        android:text="Manage Groups"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#00000000"
+        android:textSize="30dp"
+        android:textColor="#FF267F00"
+        android:textStyle="bold"
+        android:padding="5dp"
+        />
+    <ListView android:id="@+id/List"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:cacheColorHint="#FFDAFF7F"
+        />
+</LinearLayout>
