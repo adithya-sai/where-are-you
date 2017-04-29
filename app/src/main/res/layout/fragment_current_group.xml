@@ -14,10 +14,60 @@
         android:paddingRight="24dp">
 
 
+        <com.google.android.gms.maps.MapView android:id="@+id/mapView"
+            class="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            xmlns:android="http://schemas.android.com/apk/res/android" />
+
         <TextView
             android:text="Current group info comes here"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textView" />
+
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:stretchColumns="1">
+
+            <TableRow>
+                <TextView
+                    android:layout_column="1"
+                    android:text="Open..."
+                    android:padding="3dip" />
+                <TextView
+                    android:text="Ctrl-O"
+                    android:gravity="right"
+                    android:padding="3dip" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_column="1"
+                    android:text="Save..."
+                    android:padding="3dip" />
+                <TextView
+                    android:text="Ctrl-S"
+                    android:gravity="right"
+                    android:padding="3dip" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:layout_column="1"
+                    android:text="Save As..."
+                    android:padding="3dip" />
+                <TextView
+                    android:text="Ctrl-Shift-S"
+                    android:gravity="right"
+                    android:padding="3dip" />
+            </TableRow>
+
+            <View
+                android:layout_height="2dip"
+                android:background="#FF909090" />
+
+        </TableLayout>
     </LinearLayout>
+
 </ScrollView>
