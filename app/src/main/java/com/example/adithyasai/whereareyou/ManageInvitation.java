@@ -1,5 +1,6 @@
 package com.example.adithyasai.whereareyou;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,11 +10,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import org.json.*;
 
+import static android.content.Context.MODE_WORLD_READABLE;
+
 /**
  * Created by subbu on 4/26/17.
  */
 
 public class ManageInvitation extends Fragment {
+    private String userKey;
+    private String authKey;;
 
     public ManageInvitation(){}
 
@@ -52,6 +57,5 @@ public class ManageInvitation extends Fragment {
         }
 
     }
-
 }
 

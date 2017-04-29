@@ -81,8 +81,10 @@ public class MainActivity extends AppCompatActivity
         extras.putString("user",user);
         extras.putString("authKey",authKey);
         intent.putExtras(extras);
-        if(latitude.length()>0 && longitude.length()>0)
+        System.out.println(Double.parseDouble(latitude)+" "+Double.parseDouble(longitude));
+        if(Double.parseDouble(latitude)!=0.0 && Double.parseDouble(longitude)!=0.0)
         {
+            System.out.println("Starting service");
             startService(intent);
         }
 

@@ -42,6 +42,9 @@
              You can define the keys for the debug and release targets in src/debug/ and src/release/. 
         -->
         <activity android:name=".AddMembers"></activity>
+        <meta-data android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyCL_FXN7Pr89d3d_4W8O4kHlUa-nJcgXo0"/>
+
         <service android:name="com.example.adithyasai.whereareyou.CurrentLocationBackground" android:enabled="true"/>
     </application>
 
