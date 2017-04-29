@@ -37,14 +37,16 @@ public class LoginActivity extends AppCompatActivity {
 
         signInButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                 AsyncHttpPost ah=new AsyncHttpPost(LoginActivity.this);
+                AsyncHttpPost ah=new AsyncHttpPost(LoginActivity.this);
                 try {
                     String result = ah.execute("signin", emailView.getText().toString(), passwordView.getText().toString()).get();
                     System.out.println(result);
                     JSONObject jo=new JSONObject(result);
-                    String authKeyFromJson=(String) jo.get("auth_token");
-//                    String userKeyFromJson=(String) jo.get("user_id");
-                    System.out.println(authKeyFromJson);
+                    String authKeyFromJSON =(String)jo.get("auth_token");
+                    String groupId =(int)jo.get("event_id")+"";
+                    String groupName =(String)jo.get("event_name");
+                    String latitude =(double)jo.get("latitude")+"";
+                    String longitude =(double)jo.get("longitude")+"";
                     if(result.equals("False")){
                         Toast.makeText(LoginActivity.this,"Invalid entry",Toast.LENGTH_SHORT).show();
                     }
@@ -52,7 +54,11 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs",MODE_WORLD_READABLE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("userKey",emailView.getText().toString());
-                        editor.putString("authKey",authKeyFromJson);
+                        editor.putString("authKey",authKeyFromJSON);
+                        editor.putString("event_id",groupId);
+                        editor.putString("longitude",longitude);
+                        editor.putString("latitude",latitude);
+                        editor.putString("event_id",groupId);
                         editor.apply();
                         Toast.makeText(LoginActivity.this,"Login successful",Toast.LENGTH_SHORT).show();
                         Intent intent=new Intent(LoginActivity.this,MainActivity.class);
