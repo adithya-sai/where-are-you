@@ -147,14 +147,6 @@ public class CurrentLocationBackground extends Service implements LocationListen
     @Override
     public void onLocationChanged(Location arg0) {
         location=arg0;
-        try
-        {
-            //long start = new Date().getTime();
-            //while(new Date().getTime() - start < 5000L){}
-        }catch(Exception e){
-
-        }
-
         // TODO Auto-generated method stub
     }
 
