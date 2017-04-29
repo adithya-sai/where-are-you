@@ -67,7 +67,6 @@ public class CurrentLocationBackground extends Service implements LocationListen
     @Override
     public void onCreate() {
         super.onCreate();
-        System.out.println("Inside onCreate");
         flag=false;
         mTimer = new Timer();
         mTimer.schedule(new TimerTaskToGetLocation(),5,400);
@@ -108,7 +107,6 @@ public class CurrentLocationBackground extends Service implements LocationListen
     }
 
     private void fn_getlocation(){
-        System.out.println("Inside fn_getlocation");
         if (PermissionChecker.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && PermissionChecker.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             //return;
             context.startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
@@ -183,9 +181,6 @@ public class CurrentLocationBackground extends Service implements LocationListen
 
         intent.putExtra("latitude",location.getLatitude()+"");
         intent.putExtra("longitude",location.getLongitude()+"");
-        System.out.println("Setting intent");
-        System.out.println(location.getLatitude()+" "+location.getLongitude());
-
         sendBroadcast(intent);
     }
 
