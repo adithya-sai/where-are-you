@@ -148,7 +148,7 @@ public class CurrentGroup extends Fragment implements OnMapReadyCallback{
         latitude= new String();
         longitude=new String();
         getActivity().setTitle("Current Group");
-        String jsonTest="[{\"eta\":\"2\",\"user_id\":\"a\"},{\"eta\":\"3\",\"user_id\":\"b\"}]";
+//        String jsonTest="[{\"eta\":\"2\",\"user_id\":\"a\"},{\"eta\":\"3\",\"user_id\":\"b\"}]";
         updateView(jsonTest);
     }
     
@@ -178,6 +178,7 @@ public class CurrentGroup extends Fragment implements OnMapReadyCallback{
             JSONArray userListArray = new JSONArray(jsonString);
             for(int i=0;i<userListArray.length();i++){
                 JSONObject currentUserJson=userListArray.getJSONObject(i);
+                System.out.println(currentUserJson);
 //                TableRow row=new TableRow(getContext());
 //                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
 //                trArray[i].setLayoutParams(lp);
@@ -200,38 +201,49 @@ public class CurrentGroup extends Fragment implements OnMapReadyCallback{
     public void updateMap(String latitude,String longitude){
         curr_latitude=Double.parseDouble(latitude);
         curr_longitude=Double.parseDouble(longitude);
+        try{
+            GoogleDirection.withServerKey("AIzaSyCL_FXN7Pr89d3d_4W8O4kHlUa-nJcgXo0")
+                    .from(new LatLng(curr_latitude, curr_longitude))
+                    .to(new LatLng(dest_latitude,dest_longitude))
+                    .avoid(AvoidType.FERRIES)
+                    .avoid(AvoidType.HIGHWAYS)
+                    .execute(new DirectionCallback() {
+                        @Override
+                        public void onDirectionSuccess(Direction direction, String rawBody) {
+                            try{
+                                if (direction.isOK()) {
+                                    m1.setPosition(new LatLng(curr_latitude,curr_longitude));
+                                    m2.setPosition(new LatLng(dest_latitude,dest_longitude));
+                                    m1.setVisible(true);
+                                    m2.setVisible(true);
 
-        GoogleDirection.withServerKey("AIzaSyCL_FXN7Pr89d3d_4W8O4kHlUa-nJcgXo0")
-                .from(new LatLng(curr_latitude, curr_longitude))
-                .to(new LatLng(dest_latitude,dest_longitude))
-                .avoid(AvoidType.FERRIES)
-                .avoid(AvoidType.HIGHWAYS)
-                .execute(new DirectionCallback() {
-                    @Override
-                    public void onDirectionSuccess(Direction direction, String rawBody) {
-                        if (direction.isOK()) {
-                            m1.setPosition(new LatLng(curr_latitude,curr_longitude));
-                            m2.setPosition(new LatLng(dest_latitude,dest_longitude));
-                            m1.setVisible(true);
-                            m2.setVisible(true);
+                                    ArrayList<LatLng> directionPositionList = direction.getRouteList().get(0).getLegList().get(0).getDirectionPoint();
+                                    gMap.addPolyline(DirectionConverter.createPolyline(getContext(), directionPositionList, 5, Color.RED));
+                                    CameraUpdate center=
+                                            CameraUpdateFactory.newLatLng(new LatLng((curr_latitude+dest_latitude)/2,(curr_longitude+dest_longitude)/2));
+                                    CameraUpdate zoom=CameraUpdateFactory.zoomTo(16);
 
-                            ArrayList<LatLng> directionPositionList = direction.getRouteList().get(0).getLegList().get(0).getDirectionPoint();
-                            gMap.addPolyline(DirectionConverter.createPolyline(getContext(), directionPositionList, 5, Color.RED));
-                            CameraUpdate center=
-                                    CameraUpdateFactory.newLatLng(new LatLng((curr_latitude+dest_latitude)/2,(curr_longitude+dest_longitude)/2));
-                            CameraUpdate zoom=CameraUpdateFactory.zoomTo(16);
+                                    gMap.moveCamera(center);
+                                    gMap.animateCamera(zoom);
+                                } else {
+                                    System.out.println("No");
+                                }
+                            }
+                            catch (Exception e){
+                                System.out.println("onDirectionSuccess exception");
+                            }
 
-                            gMap.moveCamera(center);
-                            gMap.animateCamera(zoom);
-                        } else {
-                            System.out.println("No");
                         }
-                    }
 
-                    @Override
-                    public void onDirectionFailure(Throwable t) {
-                        System.out.println("error");
-                    }
-                });
+                        @Override
+                        public void onDirectionFailure(Throwable t) {
+                            System.out.println("error");
+                        }
+                    });
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 }

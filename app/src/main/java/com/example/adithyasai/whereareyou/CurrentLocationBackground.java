@@ -147,6 +147,13 @@ public class CurrentLocationBackground extends Service implements LocationListen
     @Override
     public void onLocationChanged(Location arg0) {
         location=arg0;
+        try
+        {
+            //Thread.sleep(10000);
+        }catch(Exception e){
+
+        }
+
         // TODO Auto-generated method stub
     }
 
