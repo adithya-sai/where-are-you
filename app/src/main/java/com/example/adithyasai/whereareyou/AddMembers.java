@@ -78,6 +78,11 @@ public class AddMembers extends AppCompatActivity {
                         extras.putString("authKey",authKey);
                         intent.putExtras(extras);
                         startService(intent);
+                        Toast.makeText(AddMembers.this,"Group created",Toast.LENGTH_SHORT).show();
+                        Intent i=new Intent(AddMembers.this,CurrentGroup.class);
+                        getApplicationContext().startActivity(i);
+
+
                     }
                 }
                 catch (Exception e){

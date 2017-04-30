@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
                     String latitude =(double)jo.get("latitude")+"";
                     String longitude =(double)jo.get("longitude")+"";
 //                    String latitude="33";
-//                    String longitude="33";
+//                    String longitude="-111.34123";
                     if(result.equals("False")){
                         Toast.makeText(LoginActivity.this,"Invalid entry",Toast.LENGTH_SHORT).show();
                     }

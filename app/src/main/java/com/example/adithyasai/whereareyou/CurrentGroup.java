@@ -29,6 +29,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -149,7 +150,7 @@ public class CurrentGroup extends Fragment implements OnMapReadyCallback{
         longitude=new String();
         getActivity().setTitle("Current Group");
 //        String jsonTest="[{\"eta\":\"2\",\"user_id\":\"a\"},{\"eta\":\"3\",\"user_id\":\"b\"}]";
-        updateView(jsonTest);
+//        updateView(jsonTest);
     }
     
 @Override
@@ -178,7 +179,7 @@ public class CurrentGroup extends Fragment implements OnMapReadyCallback{
             JSONArray userListArray = new JSONArray(jsonString);
             for(int i=0;i<userListArray.length();i++){
                 JSONObject currentUserJson=userListArray.getJSONObject(i);
-                System.out.println(currentUserJson);
+                //System.out.println(currentUserJson);
 //                TableRow row=new TableRow(getContext());
 //                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
 //                trArray[i].setLayoutParams(lp);
@@ -214,25 +215,29 @@ public class CurrentGroup extends Fragment implements OnMapReadyCallback{
                                 if (direction.isOK()) {
                                     m1.setPosition(new LatLng(curr_latitude,curr_longitude));
                                     m2.setPosition(new LatLng(dest_latitude,dest_longitude));
+                                    m1.setTitle("You are here!");
+                                    m2.setTitle("Destination");
                                     m1.setVisible(true);
                                     m2.setVisible(true);
-
                                     ArrayList<LatLng> directionPositionList = direction.getRouteList().get(0).getLegList().get(0).getDirectionPoint();
                                     gMap.addPolyline(DirectionConverter.createPolyline(getContext(), directionPositionList, 5, Color.RED));
-                                    CameraUpdate center=
-                                            CameraUpdateFactory.newLatLng(new LatLng((curr_latitude+dest_latitude)/2,(curr_longitude+dest_longitude)/2));
-                                    CameraUpdate zoom=CameraUpdateFactory.zoomTo(16);
+                                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                                    builder.include(m1.getPosition());
+                                    builder.include(m2.getPosition());
+                                    LatLngBounds bounds = builder.build();
+                                    int padding=0;
+                                    CameraUpdate cu=CameraUpdateFactory.newLatLngBounds(bounds,padding);
+                                    gMap.moveCamera(cu);
+                                    gMap.animateCamera(cu);
 
-                                    gMap.moveCamera(center);
-                                    gMap.animateCamera(zoom);
                                 } else {
                                     System.out.println("No");
                                 }
                             }
                             catch (Exception e){
                                 System.out.println("onDirectionSuccess exception");
+                                e.printStackTrace();
                             }
-
                         }
 
                         @Override

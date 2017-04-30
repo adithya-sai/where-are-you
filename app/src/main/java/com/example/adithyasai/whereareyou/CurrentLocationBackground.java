@@ -139,7 +139,7 @@ public class CurrentLocationBackground extends Service implements LocationListen
         super.onCreate();
         flag=false;
         mTimer = new Timer();
-        mTimer.schedule(new TimerTaskToGetLocation(),5,5000);
+        mTimer.schedule(new TimerTaskToGetLocation(),5,15000);
         intent = new Intent(str_receiver);
 //        fn_getlocation();
     }
@@ -280,6 +280,7 @@ public class CurrentLocationBackground extends Service implements LocationListen
                 u[1] = buildUrlDistance();
                 String s = new AsyncHttpPost(this).execute(u).get();
                 JSONObject jo1 = new JSONObject(s);
+                if(getLatitude()!=0.0 && getLongitude()!=0.0){
                 u = new String[7];
                 u[0] = "UpdateLocation";
                 u[1] = location.getLatitude()+"";
@@ -289,7 +290,7 @@ public class CurrentLocationBackground extends Service implements LocationListen
                 u[5]=getAuthKey();
                 u[6]=getGroupId();
                 String s2 = new AsyncHttpPost(this).execute(u).get();
-                intent.putExtra("json", s2);
+                intent.putExtra("json", s2);}
             }
             sendBroadcast(intent);
 
@@ -320,6 +321,7 @@ public class CurrentLocationBackground extends Service implements LocationListen
             url += getLatitude() + "," + getLongitude();
             String[] s=getDest().split(",");
             url+="&destinations="+s[0]+"%2C"+s[1];
+            //System.out.println(url);
             return url;
         }
         catch(Exception je)

@@ -107,6 +107,22 @@ public class AsyncHttpPost extends AsyncTask<String, String, String> {
                 json.put("auth_token",params[2]);
                 response=makePostRequest("http://54.218.112.218/get_invite_list",json);
             }
+            else if(params[0].equals("accept_invite")){
+                json.put("user_id",params[1]);
+                json.put("auth_token",params[2]);
+                json.put("invitation_id",params[3]);
+                json.put("status",1);
+                System.out.println(json);
+                response = makePostRequest("http://54.218.112.218/respond_to_invite", json);
+            }
+            else if(params[0].equals("reject_invite")){
+                json.put("user_id",params[1]);
+                json.put("auth_token",params[2]);
+                json.put("invitation_id",params[3]);
+                json.put("status",0);
+                System.out.println(json);
+                response = makePostRequest("http://54.218.112.218/respond_to_invite", json);
+            }
             return response;
         } catch (Exception ex) {
             System.out.println("doInBackground Exception: "+ex.getMessage());
