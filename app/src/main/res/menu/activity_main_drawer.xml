@@ -11,9 +11,7 @@
         <item
             android:id="@+id/nav_menu_3"
             android:title="Manage Invitation" />
-        <item
-            android:id="@+id/nav_menu_4"
-            android:title="Manage Group" />
+
     </group>
 
 </menu>

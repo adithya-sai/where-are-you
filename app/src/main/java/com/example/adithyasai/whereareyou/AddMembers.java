@@ -48,6 +48,8 @@ public class AddMembers extends AppCompatActivity {
         userId4=(TextInputEditText) findViewById(R.id.user_4);
         userId5=(TextInputEditText) findViewById(R.id.user_5);
         context=this;
+        Toast.makeText(AddMembers.this,"Invite users to group",Toast.LENGTH_SHORT).show();
+
 
         final ArrayList<String> userList=new ArrayList<String>();
         Button addMembers = (Button) findViewById(R.id.btn_add);
@@ -79,10 +81,8 @@ public class AddMembers extends AppCompatActivity {
                         intent.putExtras(extras);
                         startService(intent);
                         Toast.makeText(AddMembers.this,"Group created",Toast.LENGTH_SHORT).show();
-                        Intent i=new Intent(AddMembers.this,CurrentGroup.class);
-                        getApplicationContext().startActivity(i);
-
-
+                        Intent i=new Intent(AddMembers.this,MainActivity.class);
+                        startActivity(i);
                     }
                 }
                 catch (Exception e){
